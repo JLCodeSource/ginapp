@@ -19,23 +19,15 @@ func TestShowIndexPageUnauth(t *testing.T) {
 	t.Run("returns the page title in the body", func (t *testing.T) {
 		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
-
-		got := w.Code
-		want := http.StatusOK
-
-		if got != want {
-			t.Errorf("got status %d, want status %d", got, want)
-		}
-
 		page, err := ioutil.ReadAll(w.Body)
-		if err != nil {
-			t.Errorf("expected no error and got '%s'", err)
-		}
+		
 		title := "<title>Home Page</title>"
-		pageTitle := strings.Index(string(page), title) > 0 
-		if pageTitle != true {
-			t.Errorf("title is not '%s' as expected", title)
-		}
+
+		assertStatus(t, w.Code, http.StatusOK)
+
+		assertNoError(t, err)
+
+		assertPageTitle(t, page, title)
 
 	})
 }
@@ -51,12 +43,28 @@ func TestGetArticle(t *testing.T) {
 		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
 
-		want := 200
-		got := w.Code
-		if got != want {
-			t.Errorf("got status %d, want status %d", got, want)
-			t.Errorf("%s", w.Body)
-		}	
-		
+		assertStatus(t, w.Code, http.StatusOK)
+				
 	})
+}
+
+func assertStatus(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got status %d, want status %d", got, want)
+	}
+}
+
+func assertNoError(t *testing.T, err error) {
+	if err != nil {
+		t.Errorf("expected no error and got '%s'", err)
+	}
+}
+
+func assertPageTitle(t *testing.T, page []byte, title string) {
+	isTitle := strings.Index(string(page), title) > 0 
+	if ! isTitle  {
+		t.Errorf("title is not '%s' as expected", title)
+	}
+
 }
