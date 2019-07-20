@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"encoding/json"
+	"encoding/xml"
 )
 
 func TestShowIndexPageUnauth(t *testing.T) {
@@ -68,8 +70,58 @@ func TestGetArticle(t *testing.T) {
 		assertError(t, err, want)
 
 	})
-
 }
+
+func TestArticleListJSON(t *testing.T) {
+	r := getRouter(true)
+
+	r.Handle(http.MethodGet, "/", showIndexPage)
+
+	t.Run("returns multiple articles", func(t *testing.T) {
+		
+		req, _ := http.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Add("Accept", "application/json")
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
+		page, err := ioutil.ReadAll(w.Body)
+
+		var articles []article
+		err = json.Unmarshal(page, &articles)
+
+		assertStatus(t, w.Code, http.StatusOK)
+		assertNoError(t, err)
+		if ! (len(articles) >= 2) {
+			t.Errorf("expected 2 or more articles got '%d'", len(articles))
+		}
+
+	})
+}
+
+func TestArticleXML(t *testing.T){
+	r := getRouter(true)
+
+	r.Handle(http.MethodGet, "/article/view/:article_id", getArticle)
+
+	t.Run("returns multiple articles", func(t *testing.T) {
+		
+		req, _ := http.NewRequest(http.MethodGet, "/article/view/1", nil)
+		req.Header.Add("Accept", "application/xml")
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
+		page, err := ioutil.ReadAll(w.Body)
+
+		var a article
+		err = xml.Unmarshal(page, &a)
+
+		assertStatus(t, w.Code, http.StatusOK)
+		assertNoError(t, err)
+		if ! (a.ID == 1 && len(a.Title) >= 0) {
+			t.Errorf("expected id 1 and title len >= 0 but got '%d' & '%d'", a.ID, len(a.Title))
+		}
+
+	})
+}
+
 
 func assertStatus(t *testing.T, got, want int) {
 	t.Helper()
