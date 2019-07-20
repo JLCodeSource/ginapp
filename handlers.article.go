@@ -31,6 +31,7 @@ func getArticle (c *gin.Context) {
 	// if not valid article ID in URL report Not Found
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
+		
 	}
 
 	// Check whether article exists
