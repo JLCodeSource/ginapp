@@ -16,18 +16,47 @@ func TestShowIndexPageUnauth(t *testing.T) {
 	// Create a request to send to the above route
 	req, _ := http.NewRequest("GET", "/", nil)
 
-	testHTTPResponse(t, r, req, func(w *httptest.ResponseRecorder) bool {
-		// Test that the http status code is 200 (StatusOK)
-		// Assign statusOK to the true/false evaluation of whether the return code is 200
-		statusOK := w.Code == http.StatusOK
+	t.Run("returns the page title in the body", func (t *testing.T) {
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
 
-		// Test that the page title is "Home Page"
-		// You can carry out a lot more detailed tests using libraries to
-		// parse and process HTML
-		// Assign pageOK to true/false evaluation of whether err is nil & title is Home Page
-		p, err := ioutil.ReadAll(w.Body)
-		pageOK := err == nil && strings.Index(string(p), "<title>Home Page</title>") > 0
+		got := w.Code
+		want := http.StatusOK
 
-		return statusOK && pageOK
+		if got != want {
+			t.Errorf("got status %d, want status %d", got, want)
+		}
+
+		page, err := ioutil.ReadAll(w.Body)
+		if err != nil {
+			t.Errorf("expected no error and got '%s'", err)
+		}
+		title := "<title>Home Page</title>"
+		pageTitle := strings.Index(string(page), title) > 0 
+		if pageTitle != true {
+			t.Errorf("title is not '%s' as expected", title)
+		}
+
+	})
+}
+
+func TestGetArticle(t *testing.T) {
+	r := getRouter(true)
+
+	r.Handle("GET", "/article/view/:article_id", getArticle)
+
+	t.Run("returns a single article", func(t *testing.T) {
+		
+		req, _ := http.NewRequest("GET", "/article/view/1", nil)
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
+
+		want := 200
+		got := w.Code
+		if got != want {
+			t.Errorf("got status %d, want status %d", got, want)
+			t.Errorf("%s", w.Body)
+		}	
+		
 	})
 }

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"net/http"
-	"net/http/httptest"
+	//"net/http"
+	//"net/http/httptest"
 	"os"
 	"testing"
 	"github.com/gin-gonic/gin"
@@ -29,7 +29,7 @@ func getRouter(withTemplates bool) *gin.Engine {
 }
 
 // Helper function to process a request and test its response
-func testHTTPResponse(t *testing.T, r *gin.Engine, req *http.Request, f func(w *httptest.ResponseRecorder) bool) {
+/* func testHTTPResponse(t *testing.T, r *gin.Engine, req *http.Request, f func(w *httptest.ResponseRecorder) bool) {
 
 	// Create a response recorder
 
@@ -42,7 +42,7 @@ func testHTTPResponse(t *testing.T, r *gin.Engine, req *http.Request, f func(w *
 		t.Errorf("error with http response")
 	}
 
-}
+} */
 
 // This function is used to store the main lists into the temporary
 // list for testing
