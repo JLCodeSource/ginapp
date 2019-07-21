@@ -13,7 +13,7 @@ func initRoutes() {
 	{
 		userRoutes.Handle(http.MethodGet, "/register", showRegistrationPage)
 
-		userRoutes.Handle(http.MethodGet, "/register", register)
+		userRoutes.Handle(http.MethodPost, "/register", register)
 	}
 
 	// Handle the article route
