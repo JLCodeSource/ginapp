@@ -10,6 +10,10 @@ import (
 	"strconv"
 )
 
+const (
+	loginRoute = "/u/login"
+	registerRoute = "/u/register"
+)
 
 var dummyArticleList []article
 

@@ -88,11 +88,11 @@ func TestLoginUnauthenticated(t *testing.T){
 	w := httptest.NewRecorder()
 	r := getRouter(true)
 
-	r.Handle(http.MethodPost, "/u/login", performLogin)
+	r.Handle(http.MethodPost, loginRoute, performLogin)
 
 	loginPayload := getLoginPOSTPayload()
 
-	req := getHeaders(t, http.MethodPost, "u/login", loginPayload)
+	req := getHeaders(t, http.MethodPost, loginRoute, loginPayload)
 
 	r.ServeHTTP(w, req)
 

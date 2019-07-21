@@ -10,9 +10,9 @@ import (
 func TestShowRegistrationPageUnauthenticated(t *testing.T) {
 	r := getRouter(true)
 
-	r.Handle(http.MethodGet, "/u/register", showRegistrationPage)
+	r.Handle(http.MethodGet, registerRoute, showRegistrationPage)
 
-	req, _ := http.NewRequest(http.MethodGet, "/u/register", nil)
+	req, _ := http.NewRequest(http.MethodGet, registerRoute, nil)
 	w := httptest.NewRecorder()
 
 	r.ServeHTTP(w, req)
@@ -30,9 +30,9 @@ func TestShowLoginPageUnauthenticated(t *testing.T){
 	r := getRouter(true)
 	w := httptest.NewRecorder()
 
-	r.Handle(http.MethodGet, "/u/login", showLoginPage)
+	r.Handle(http.MethodGet, loginRoute, showLoginPage)
 
-	req, _ := http.NewRequest(http.MethodGet, "u/login", nil)
+	req, _ := http.NewRequest(http.MethodGet, loginRoute, nil)
 
 	r.ServeHTTP(w, req)
 
@@ -50,11 +50,11 @@ func TestRegisterUnauthenticated(t *testing.T) {
 
 	r := getRouter(true)
 	w := httptest.NewRecorder()
-	r.Handle(http.MethodPost, "/u/register", register)
+	r.Handle(http.MethodPost, registerRoute, register)
 
 	registrationPayload := getRegistrationPOSTPayload()
 	
-	req := getHeaders(t, http.MethodPost, "u/register", registrationPayload)
+	req := getHeaders(t, http.MethodPost, registerRoute, registrationPayload)
 
 	r.ServeHTTP(w, req)
 
@@ -69,18 +69,16 @@ func TestRegisterUnauthenticated(t *testing.T) {
 
 }
 
-
-
 func TestRegisterUnauthenticatedUnavailableUsername(t *testing.T) {
 	saveLists()
 	r := getRouter(true)
 	w := httptest.NewRecorder()
 
-	r.Handle(http.MethodPost, "/u/register", register)
+	r.Handle(http.MethodPost, registerRoute, register)
 
 	registrationPayload := getLoginPOSTPayload()
 
-	req := getHeaders(t, http.MethodPost, "/u/register", registrationPayload)
+	req := getHeaders(t, http.MethodPost, registerRoute, registrationPayload)
 
 	r.ServeHTTP(w, req)
 
@@ -96,11 +94,11 @@ func TestLoginUnauthenticatedIncorrectCredentials(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := getRouter(true)
 	
-	r.Handle(http.MethodPost, "/u/login", performLogin)
+	r.Handle(http.MethodPost, loginRoute, performLogin)
 
 	loginPayload := getRegistrationPOSTPayload()
 
-	req := getHeaders(t, http.MethodPost, "/u/login", loginPayload)
+	req := getHeaders(t, http.MethodPost, loginRoute, loginPayload)
 
 	r.ServeHTTP(w, req)
 
