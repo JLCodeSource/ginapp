@@ -42,3 +42,9 @@ func generateSessionToken() string {
 	// Not a secure way to gen session tokens - Not for Prod
 	return strconv.FormatInt(rand.Int63(), 16)
 }
+
+func showLoginPage(c *gin.Context) {}
+
+func performLogin(c *gin.Context) {}
+
+func logout(c *gin.Context) {}
