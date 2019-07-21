@@ -24,3 +24,14 @@ func getArticleByID(id int) (*article, error) {
 	}
 	return nil, ErrIDNotFound
 }
+
+func createNewArticle(title, content string) (a article, err error) {
+	
+	lastID := len(articleList)
+
+	a = article{ID: lastID+1, Title: title, Content: content}
+
+	articleList = append(articleList, a)
+	
+	return a, nil
+}

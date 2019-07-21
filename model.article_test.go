@@ -33,3 +33,19 @@ func TestGetAllArticles(t *testing.T) {
 }
 
 // Next steps Allowing Users to Post New Articles
+
+func TestCreateNewArticle(t *testing.T) {
+	numberOfArticles := len(getAllArticles())
+	newTitle := "New test title"
+	newContent := "New test content"
+
+	a, err := createNewArticle(newTitle, newContent)
+
+	allArticles := getAllArticles()
+	newLength := len(allArticles)
+	
+	assertNoError(t, err)
+	assertNumberOfArticles(t, newLength, numberOfArticles+1)
+	assertArticleTitle(t, &a, newTitle)
+	assertArticleContent(t, &a, newContent)
+}

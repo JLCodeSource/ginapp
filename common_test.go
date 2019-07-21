@@ -76,3 +76,28 @@ func assertPageContains(t *testing.T, page []byte, content string) {
 	}
 
 }
+
+func assertNumberOfArticles(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got %d articles, wanted %d", got, want)
+	}
+}
+
+func assertArticleTitle(t *testing.T, a *article, title string) {
+	t.Helper()
+	got := a.Title
+	want := title
+	if got != want {
+		t.Errorf("got '%s' title, wanted '%s'", got, want)
+	}
+}
+
+func assertArticleContent(t *testing.T, a *article, content string) {
+	t.Helper()
+	got := a.Content
+	want := content
+	if got != want {
+		t.Errorf("got '%s' content, wanted '%s'", got, want)
+	}
+}
