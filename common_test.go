@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+
 var dummyArticleList []article
 
 var dummyUserList []user
