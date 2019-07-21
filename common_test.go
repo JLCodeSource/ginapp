@@ -68,10 +68,33 @@ func assertError(t *testing.T, got, want error) {
 	}
 }
 
+func assertUser(t *testing.T, got *user, want string) {
+	t.Helper()
+	if got.Username != want {
+		t.Errorf("wanted username '%s' but got '%s'", got.Username, want)
+	}
+}
+
 func assertNilUser(t *testing.T, user *user) {
+	t.Helper()
 	if user != nil {
 		t.Errorf("expected nil response, but got username '%s'", user.Username)
 	}
+}
+
+func assertUsernameAvailable(t *testing.T, username string, available bool) {
+	t.Helper()
+	switch available {
+	case true:
+		if !isUsernameAvailable(username) {
+			t.Errorf("expected username '%s' to be available, but it is not", username)
+		}
+	case false:
+		if isUsernameAvailable(username) {
+			t.Errorf("expected username '%s' to be unavailable, but it is not", username)
+		}
+	}
+	
 }
 
 func assertPageContains(t *testing.T, page []byte, content string) {

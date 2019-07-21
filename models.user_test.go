@@ -14,39 +14,25 @@ func TestUsernameAvailability(t *testing.T) {
 	newusername := "newuser"
 	existingusername := "user1"
 	
-	//TODO refactor with asserts
-
-	if !isUsernameAvailable(newusername) {
-		t.Errorf("expected username '%s' to be available, but it is not", newusername)
-	}
-
-	if isUsernameAvailable(existingusername) {
-		t.Errorf("expected username '%s' to be unavailable, but it is not", existingusername)
-	}
+	assertUsernameAvailable(t, newusername, true)
+	assertUsernameAvailable(t, existingusername, false)
 
 	registerNewUser("newuser", "newpass")
-	if isUsernameAvailable(newusername) {
-		t.Errorf("expected username '%s' to be unavailable, but it is not", newusername)
-	}
 
+	assertUsernameAvailable(t, newusername, false)
+	
 	restoreLists()
 }
 
 func TestValidUserRegistration(t *testing.T) {
 	saveLists()
 
-	//TODO refactor with asserts
+	user := "newuser"
 
-	u, err := registerNewUser("newuser", "newpass")
-	empty := ""
+	u, err := registerNewUser(user, "newpass")
 
-	if err != nil {
-		t.Errorf("did not expect an error but got '%s'", err)
-	}
-
-	if u.Username == empty {
-		t.Errorf("wanted username '%s' but got '%s'", u.Username, empty)
-	}
+	assertNoError(t, err)
+	assertUser(t, u, user)
 }
 
 func TestInvalidUserRegistration(t *testing.T) {
