@@ -84,17 +84,21 @@ func assertNilUser(t *testing.T, user *user) {
 
 func assertUsernameAvailable(t *testing.T, username string, available bool) {
 	t.Helper()
-	switch available {
-	case true:
-		if !isUsernameAvailable(username) {
-			t.Errorf("expected username '%s' to be available, but it is not", username)
-		}
-	case false:
-		if isUsernameAvailable(username) {
-			t.Errorf("expected username '%s' to be unavailable, but it is not", username)
-		}
+	got := isUsernameAvailable(username)
+	want := available
+	if got != want {
+			t.Errorf("wanted username '%s' available to be %t, but got %t", username, want, got)
 	}
-	
+}
+
+func assertUserValid(t *testing.T, username, password string, valid bool) {
+	t.Helper()
+	got := isUserValid(username, password)
+	want := valid
+	if got != want {
+		t.Errorf("wanted user '%s' with pass '%s' validity to be %t but they were %t", 
+			username, password, want, got)
+	}
 }
 
 func assertPageContains(t *testing.T, page []byte, content string) {

@@ -20,7 +20,7 @@ func TestUsernameAvailability(t *testing.T) {
 	registerNewUser("newuser", "newpass")
 
 	assertUsernameAvailable(t, newusername, false)
-	
+
 	restoreLists()
 }
 
@@ -69,36 +69,22 @@ func TestUserValidity(t *testing.T) {
 
 	//TODO tabularize tests & refactor with assertValid
 
-	if !isUserValid(user1, pass1) {
-		t.Errorf("expected user '%s' and pass '%s' to validate but they did not", 
-			user1, pass1)
+	validTests := []struct {
+		name string
+		pass string
+		valid bool
+	}{
+		{name: user1, pass: pass1, valid: true},
+		{name: user2, pass: pass1, valid: false},
+		{name: user1, pass: empty, valid: false},
+		{name: empty, pass: pass1, valid: false},
+		{name: user1Cap, pass: pass1, valid: false},
+		{name: user1, pass: pass1Cap, valid: false},
 	}
 
-	if isUserValid(user2, pass1) {
-		t.Errorf("expected user '%s' and pass '%s' to be invalid and they weren't", 
-			user2, pass1)
+	for _, tt := range validTests {
+		assertUserValid(t, tt.name, tt.pass, tt.valid)
 	}
-
-	if isUserValid(user1, empty) {
-		t.Errorf("expected user '%s' and pass '%s' to be invalid and they weren't", 
-			user1, empty)
-	}
-
-	if isUserValid(empty, pass1) {
-		t.Errorf("expected user '%s' and pass '%s' to be invalid and they weren't",
-			empty, pass1)
-	}
-
-	if isUserValid(user1Cap, pass1) {
-		t.Errorf("expected user '%s' and pass '%s' to be invalid and they weren't",
-			user1Cap, pass1)
-	}
-
-	if isUserValid(user1, pass1Cap) {
-		t.Errorf("expected user '%s' and pass '%s' to be invalid and they weren't",
-			user1, pass1Cap)
-	}
-
 }
 
 func TestLoginUnauthenticated(t *testing.T){
