@@ -4,10 +4,7 @@ import (
 	"testing"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"io/ioutil"
-	"strings"
-	"strconv"
 )
 
 func TestShowRegistrationPageUnauthenticated(t *testing.T) {
@@ -55,14 +52,9 @@ func TestRegisterUnauthenticated(t *testing.T) {
 	w := httptest.NewRecorder()
 	r.Handle(http.MethodPost, "/u/register", register)
 
-
-	// TODO refactor out payload tests and headers
 	registrationPayload := getRegistrationPOSTPayload()
-	payload := strings.NewReader(registrationPayload)
-	lenPayload := strconv.Itoa(len(registrationPayload))
-	req, _ := http.NewRequest(http.MethodPost, "u/register", payload)
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("Content-Length", lenPayload)
+	
+	req := getHeaders(t, http.MethodPost, "u/register", registrationPayload)
 
 	r.ServeHTTP(w, req)
 
@@ -86,13 +78,9 @@ func TestRegisterUnauthenticatedUnavailableUsername(t *testing.T) {
 
 	r.Handle(http.MethodPost, "/u/register", register)
 
-	// TODO refactor out payload tests and headers
 	registrationPayload := getLoginPOSTPayload()
-	payload := strings.NewReader(registrationPayload)
-	lenPayload := strconv.Itoa(len(registrationPayload))
-	req, _ := http.NewRequest(http.MethodPost, "/u/register", payload)
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("Content-Length", lenPayload)
+
+	req := getHeaders(t, http.MethodPost, "/u/register", registrationPayload)
 
 	r.ServeHTTP(w, req)
 
@@ -110,35 +98,15 @@ func TestLoginUnauthenticatedIncorrectCredentials(t *testing.T) {
 	
 	r.Handle(http.MethodPost, "/u/login", performLogin)
 
-	// TODO refactor out payload tests and headers
 	loginPayload := getRegistrationPOSTPayload()
-	payload := strings.NewReader(loginPayload)
-	lenPayload := strconv.Itoa(len(loginPayload))
-	req, _ := http.NewRequest(http.MethodPost, "/u/login", payload)
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("Content-Length", lenPayload)
+
+	req := getHeaders(t, http.MethodPost, "/u/login", loginPayload)
 
 	r.ServeHTTP(w, req)
 
 	assertStatus(t, w.Code, http.StatusBadRequest)
 
-
 	restoreLists()
 
 }
 
-func getLoginPOSTPayload() string {
-	params := url.Values{}
-	params.Add("username", "user1")
-	params.Add("password", "pass1")
-
-	return params.Encode()
-}
-
-func getRegistrationPOSTPayload() string {
-	params := url.Values{}
-	params.Add("username", "u1")
-	params.Add("password", "p1")
-
-	return params.Encode()
-}

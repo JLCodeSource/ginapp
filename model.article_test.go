@@ -9,6 +9,8 @@ func TestGetAllArticles(t *testing.T) {
 	got := getAllArticles()
 	want := articleList
 
+	//TODO refactor for asserts
+	
 	// Check that the length of the list of articles returned is the same 
 	// as the length of the global variable holding the list
 	gotLen := len(got)

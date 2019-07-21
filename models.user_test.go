@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"io/ioutil"
-	"strings"
-	"strconv"
 )
 
 func TestUsernameAvailability(t *testing.T) {
@@ -67,8 +65,6 @@ func TestUserValidity(t *testing.T) {
 	pass1Cap := "Pass1"
 	empty := ""
 
-	//TODO tabularize tests & refactor with assertValid
-
 	validTests := []struct {
 		name string
 		pass string
@@ -94,14 +90,9 @@ func TestLoginUnauthenticated(t *testing.T){
 
 	r.Handle(http.MethodPost, "/u/login", performLogin)
 
-	// TODO refactor out payload tests and headers
-
 	loginPayload := getLoginPOSTPayload()
-	payload := strings.NewReader(loginPayload)
-	loginlen := strconv.Itoa(len(loginPayload))
-	req, _ := http.NewRequest(http.MethodPost, "/u/login", payload)
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("Content-Length", loginlen)
+
+	req := getHeaders(t, http.MethodPost, "u/login", loginPayload)
 
 	r.ServeHTTP(w, req)
 

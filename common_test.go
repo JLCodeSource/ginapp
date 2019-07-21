@@ -5,6 +5,9 @@ import (
 	"testing"
 	"github.com/gin-gonic/gin"
 	"strings"
+	"net/http"
+	"net/url"
+	"strconv"
 )
 
 
@@ -42,6 +45,36 @@ func restoreLists() {
 	userList = dummyUserList
 	articleList = dummyArticleList
 }
+
+func getLoginPOSTPayload() string {
+	params := url.Values{}
+	params.Add("username", "user1")
+	params.Add("password", "pass1")
+
+	return params.Encode()
+}
+
+func getRegistrationPOSTPayload() string {
+	params := url.Values{}
+	params.Add("username", "u1")
+	params.Add("password", "p1")
+
+	return params.Encode()
+}
+
+func getHeaders(t *testing.T, method, route, payload string) *http.Request{
+
+	sPayload := strings.NewReader(payload)
+	lenPayload := strconv.Itoa(len(payload))
+
+	req, _ := http.NewRequest(method, route, sPayload)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Content-Length", lenPayload)
+
+	return req
+}
+	
+	
 
 
 func assertStatus(t *testing.T, got, want int) {
