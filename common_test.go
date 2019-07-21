@@ -68,6 +68,12 @@ func assertError(t *testing.T, got, want error) {
 	}
 }
 
+/* func assertNil(t *testing.T, got, want ) {
+	if u != nil {
+		t.Errorf("expected nil response, but got '%s'", u)
+	}
+} */
+
 func assertPageContains(t *testing.T, page []byte, content string) {
 	t.Helper()
 	isContent := strings.Index(string(page), content) > 0 

@@ -29,7 +29,7 @@ func registerNewUser(username, password string) (*user, error) {
 	if strings.TrimSpace(password) == "" {
 		return nil, errors.New("password can't be empty")
 	} else if !isUsernameAvailable(username) {
-		return nil, errors.New("username isn't available")
+		return nil, ErrUsernameUnavailable
 	}
 
 	u := user{Username: username, Password: password}

@@ -54,26 +54,31 @@ func TestInvalidUserRegistration(t *testing.T) {
 
 	//TODO refactor with asserts
 
-	u, err := registerNewUser("user1", "pass1")
+	t.Run("cannot register existing user" , func(t *testing.T){
 
-	if err == nil {
-		t.Errorf("expected error but got none")
-	}
+		u, err := registerNewUser("user1", "pass1")
 
-	if u != nil {
-		t.Errorf("expected nil response, but got '%s'", u)
-	}
+		assertError(t, err, ErrUsernameUnavailable)
+		//assertNil(t, u)
+		if u != nil {
+			t.Errorf("expected nil response, but got '%s'", u)
+		}
+	})
+	
+	t.Run("cannot register user without valid password", func(t *testing.T){
 
-	u, err = registerNewUser("newuser", "")
+		u, err := registerNewUser("newuser", "")
+
+		if err == nil {
+			t.Errorf("expected error but got none")
+		}
+
+		if u != nil {
+			t.Errorf("expected nil response, but got '%s'", u)
+		}
+	})
 
 	
-	if err == nil {
-		t.Errorf("expected error but got none")
-	}
-
-	if u != nil {
-		t.Errorf("expected nil response, but got '%s'", u)
-	}
 
 	restoreLists()
 }
