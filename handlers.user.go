@@ -43,8 +43,32 @@ func generateSessionToken() string {
 	return strconv.FormatInt(rand.Int63(), 16)
 }
 
-func showLoginPage(c *gin.Context) {}
+func showLoginPage(c *gin.Context) {
+	render(c, gin.H{
+		"title": "Login",
+	}, "login.html")
+}
 
-func performLogin(c *gin.Context) {}
+func performLogin(c *gin.Context) {
+	// Obtain the POSTed username and password values
+	username := c.PostForm("username")
+	password := c.PostForm("password")
 
-func logout(c *gin.Context) {}
+	if isUserValid(username, password) {
+		token := generateSessionToken()
+		c.SetCookie("token", token, 3600, "", "", false, true)
+		c.Set("is_logged_in", true)
+
+		render(c, gin.H{
+			"title": "Successful Login"}, "login-successful.html")
+		} else {
+			c.HTML(http.StatusBadRequest, "login.html", gin.H{
+				"ErrorTitle":	"Login Failed",
+				"ErrorMessage":	"Invalid credentials"})
+		}
+}
+
+func logout(c *gin.Context) {
+	c.SetCookie("token", "", -1, "", "", false, true)
+	c.Redirect(http.StatusTemporaryRedirect, "/")
+}

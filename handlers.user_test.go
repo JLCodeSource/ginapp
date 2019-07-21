@@ -114,13 +114,14 @@ func TestLoginUnauthenticatedIncorrectCredentials(t *testing.T) {
 	loginPayload := getRegistrationPOSTPayload()
 	payload := strings.NewReader(loginPayload)
 	lenPayload := strconv.Itoa(len(loginPayload))
-	req, _ := http.NewRequest(http.MethodPost, "/u/register", payload)
+	req, _ := http.NewRequest(http.MethodPost, "/u/login", payload)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("Content-Length", lenPayload)
 
 	r.ServeHTTP(w, req)
 
 	assertStatus(t, w.Code, http.StatusBadRequest)
+
 
 	restoreLists()
 
