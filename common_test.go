@@ -68,11 +68,11 @@ func assertError(t *testing.T, got, want error) {
 	}
 }
 
-/* func assertNil(t *testing.T, got, want ) {
-	if u != nil {
-		t.Errorf("expected nil response, but got '%s'", u)
+func assertNilUser(t *testing.T, user *user) {
+	if user != nil {
+		t.Errorf("expected nil response, but got username '%s'", user.Username)
 	}
-} */
+}
 
 func assertPageContains(t *testing.T, page []byte, content string) {
 	t.Helper()

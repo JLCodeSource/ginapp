@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"strings"
 )
 
@@ -27,7 +26,7 @@ var userList = []user{
 func registerNewUser(username, password string) (*user, error) {
 	
 	if strings.TrimSpace(password) == "" {
-		return nil, errors.New("password can't be empty")
+		return nil, ErrPasswordNotEmpty
 	} else if !isUsernameAvailable(username) {
 		return nil, ErrUsernameUnavailable
 	}
