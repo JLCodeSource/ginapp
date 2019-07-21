@@ -5,7 +5,6 @@ import (
 	"testing"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"encoding/json"
 	"encoding/xml"
 )
@@ -13,10 +12,10 @@ import (
 func TestShowIndexPageUnauth(t *testing.T) {
 	r := getRouter(true)
 
-	r.Handle("GET", "/", showIndexPage)
+	r.Handle(http.MethodGet, "/", showIndexPage)
 
 	// Create a request to send to the above route
-	req, _ := http.NewRequest("GET", "/", nil)
+	req, _ := http.NewRequest(http.MethodGet, "/", nil)
 
 	t.Run("returns the page title in the body", func (t *testing.T) {
 		w := httptest.NewRecorder()
@@ -53,7 +52,7 @@ func TestGetArticle(t *testing.T) {
 		assertPageContains(t, page, body)
 
 	})
-	t.Run("returns a not found on a non-integer id", func(t *testing.T) {		
+/* 	t.Run("returns a not found on a non-integer id", func(t *testing.T) {		
 		req, _ := http.NewRequest(http.MethodGet, "/article/view/asdasda", nil)
 		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
@@ -69,7 +68,7 @@ func TestGetArticle(t *testing.T) {
 		assertStatus(t, w.Code, http.StatusNotFound)
 		assertError(t, err, want)
 
-	})
+	}) */
 }
 
 func TestArticleListJSON(t *testing.T) {
@@ -122,36 +121,3 @@ func TestArticleXML(t *testing.T){
 	})
 }
 
-
-func assertStatus(t *testing.T, got, want int) {
-	t.Helper()
-	if got != want {
-		t.Errorf("got status %d, want status %d", got, want)
-	}
-}
-
-func assertNoError(t *testing.T, err error) {
-	t.Helper()
-	if err != nil {
-		t.Errorf("expected no error and got '%s'", err)
-	}
-}
-
-func assertError(t *testing.T, got, want error) {
-	t.Helper()
-	if got == nil {
-		t.Errorf("expected error but didn't get one")
-	}
-	if got != want {
-		t.Errorf("got error '%s', expected '%s'", got, want)
-	}
-}
-
-func assertPageContains(t *testing.T, page []byte, content string) {
-	t.Helper()
-	isContent := strings.Index(string(page), content) > 0 
-	if ! isContent  {
-		t.Errorf("page does not contain '%s' as expected", content)
-	}
-
-}
