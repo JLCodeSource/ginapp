@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"encoding/json"
 	"encoding/xml"
-	"strings"
-	"strconv"
+	//"strings"
+	//"strconv"
 )
 
 func TestShowIndexPageUnauth(t *testing.T) {
@@ -132,16 +132,11 @@ func TestArticleCreationAuthenticated(t *testing.T) {
 
 	r.Handle(http.MethodPost, "/article/create", createArticle)
 
-/* 	loginPayload := getRegistrationPOSTPayload()
-
-	req := getHeaders(t, http.MethodPost, loginRoute, loginPayload) */
-
 	articlePayload := getArticlePOSTPayload()
-	req, _ := http.NewRequest(http.MethodPost, "/article/create", strings.NewReader(articlePayload))
-	req.Header = http.Header{"Cookie": w.HeaderMap["Set-Cookie"]}
-	req.Header.Add("Content-Type", "application/X-www-form-urlencoded")
-	req.Header.Add("Content-Length", strconv.Itoa(len(articlePayload)))
 
+	req := getHeaders(t, http.MethodPost, createRoute, articlePayload)
+	req.Header = http.Header{"Cookie": w.HeaderMap["Set-Cookie"]}
+	
 	r.ServeHTTP(w, req)
 
 	page, err := ioutil.ReadAll(w.Body)

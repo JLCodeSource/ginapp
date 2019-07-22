@@ -13,6 +13,7 @@ import (
 const (
 	loginRoute = "/u/login"
 	registerRoute = "/u/register"
+	createRoute = "/article/create"
 )
 
 var dummyArticleList []article
