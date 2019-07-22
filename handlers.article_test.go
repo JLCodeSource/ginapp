@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"encoding/json"
 	"encoding/xml"
+	"strings"
+	"strconv"
 )
 
 func TestShowIndexPageUnauth(t *testing.T) {
@@ -121,3 +123,34 @@ func TestArticleXML(t *testing.T){
 	})
 }
 
+func TestArticleCreationAuthenticated(t *testing.T) {
+	saveLists()
+	w := httptest.NewRecorder()
+	r := getRouter(true)
+
+	http.SetCookie(w, &http.Cookie{Name: "token", Value: "123"})
+
+	r.Handle(http.MethodPost, "/article/create", createArticle)
+
+/* 	loginPayload := getRegistrationPOSTPayload()
+
+	req := getHeaders(t, http.MethodPost, loginRoute, loginPayload) */
+
+	articlePayload := getArticlePOSTPayload()
+	req, _ := http.NewRequest(http.MethodPost, "/article/create", strings.NewReader(articlePayload))
+	req.Header = http.Header{"Cookie": w.HeaderMap["Set-Cookie"]}
+	req.Header.Add("Content-Type", "application/X-www-form-urlencoded")
+	req.Header.Add("Content-Length", strconv.Itoa(len(articlePayload)))
+
+	r.ServeHTTP(w, req)
+
+	page, err := ioutil.ReadAll(w.Body)
+	contains := "<title>Successful Successful</title>"
+
+	assertStatus(t, w.Code, http.StatusOK)
+	assertNoError(t, err)
+	assertPageContains(t, page, contains)
+
+	restoreLists()
+
+}

@@ -66,6 +66,10 @@ func getRegistrationPOSTPayload() string {
 	return params.Encode()
 }
 
+func getArticlePOSTPayload() string {
+	return ""
+}
+
 func getHeaders(t *testing.T, method, route, payload string) *http.Request{
 
 	sPayload := strings.NewReader(payload)
@@ -77,9 +81,6 @@ func getHeaders(t *testing.T, method, route, payload string) *http.Request{
 
 	return req
 }
-	
-	
-
 
 func assertStatus(t *testing.T, got, want int) {
 	t.Helper()

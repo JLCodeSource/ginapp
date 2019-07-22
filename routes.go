@@ -19,6 +19,11 @@ func initRoutes() {
 
 	}
 
-	// Handle the article route
-	router.Handle(http.MethodGet, "/article/view/:article_id", getArticle)
+	articleRoutes := router.Group("/article")
+	{
+		articleRoutes.Handle(http.MethodGet, "/view/:article_id", getArticle)
+		articleRoutes.Handle(http.MethodPost, "/create", createArticle)
+	}
+
+	
 }

@@ -41,3 +41,5 @@ func getArticle (c *gin.Context) {
 		}, "article.html")	
 
 }
+
+func createArticle (c *gin.Context) { }
