@@ -22,6 +22,7 @@ func initRoutes() {
 	articleRoutes := router.Group("/article")
 	{
 		articleRoutes.Handle(http.MethodGet, "/view/:article_id", getArticle)
+		articleRoutes.Handle(http.MethodGet, "/create", showArticleCreationPage)
 		articleRoutes.Handle(http.MethodPost, "/create", createArticle)
 	}
 

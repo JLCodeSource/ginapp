@@ -38,7 +38,7 @@ func TestGetAllArticles(t *testing.T) {
 
 func TestCreateNewArticle(t *testing.T) {
 	numberOfArticles := len(getAllArticles())
-	newTitle := "New test title"
+	newTitle := "New Test Title"
 	newContent := "New test content"
 
 	a, err := createNewArticle(newTitle, newContent)
@@ -48,6 +48,6 @@ func TestCreateNewArticle(t *testing.T) {
 	
 	assertNoError(t, err)
 	assertNumberOfArticles(t, newLength, numberOfArticles+1)
-	assertArticleTitle(t, &a, newTitle)
-	assertArticleContent(t, &a, newContent)
+	assertArticleTitle(t, a, newTitle)
+	assertArticleContent(t, a, newContent)
 }

@@ -145,10 +145,11 @@ func TestArticleCreationAuthenticated(t *testing.T) {
 	r.ServeHTTP(w, req)
 
 	page, err := ioutil.ReadAll(w.Body)
-	contains := "<title>Successful Successful</title>"
+	contains := "<title>Submission Successful</title>"
 
 	assertStatus(t, w.Code, http.StatusOK)
 	assertNoError(t, err)
+	//TODO add assertAuthenticated
 	assertPageContains(t, page, contains)
 
 	restoreLists()

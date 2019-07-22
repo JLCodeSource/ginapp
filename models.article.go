@@ -25,13 +25,14 @@ func getArticleByID(id int) (*article, error) {
 	return nil, ErrIDNotFound
 }
 
-func createNewArticle(title, content string) (a article, err error) {
-	
+func createNewArticle(title, content string) (*article, error) {
+	//TODO investigate pointer to New Article
+
 	lastID := len(articleList)
 
-	a = article{ID: lastID+1, Title: title, Content: content}
+	a := article{ID: lastID+1, Title: title, Content: content}
 
 	articleList = append(articleList, a)
 	
-	return a, nil
+	return &a, nil
 }

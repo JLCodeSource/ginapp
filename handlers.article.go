@@ -42,4 +42,21 @@ func getArticle (c *gin.Context) {
 
 }
 
-func createArticle (c *gin.Context) { }
+func createArticle (c *gin.Context) { 
+	title := c.PostForm("title")
+	content := c.PostForm("content")
+
+	a, err := createNewArticle(title, content)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+	} else {
+		render(c, gin.H{
+			"title": "Submission Successful",
+			"payload": a}, "submission-successful.html")
+	}
+}
+
+func showArticleCreationPage (c *gin.Context) {
+	render(c, gin.H{
+		"title": "Create New Article"}, "create-article.html")
+}

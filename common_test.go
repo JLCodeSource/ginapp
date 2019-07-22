@@ -50,6 +50,8 @@ func restoreLists() {
 	articleList = dummyArticleList
 }
 
+// TODO refactor get...Payload
+
 func getLoginPOSTPayload() string {
 	params := url.Values{}
 	params.Add("username", "user1")
@@ -67,7 +69,11 @@ func getRegistrationPOSTPayload() string {
 }
 
 func getArticlePOSTPayload() string {
-	return ""
+	params := url.Values{}
+	params.Add("ID", "3")
+	params.Add("Title", "Article 3")
+	params.Add("Content", "Article 3 body")
+	return params.Encode()
 }
 
 func getHeaders(t *testing.T, method, route, payload string) *http.Request{
