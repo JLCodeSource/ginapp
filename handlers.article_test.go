@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"encoding/json"
 	"encoding/xml"
-	//"strings"
-	//"strconv"
 )
 
 func TestShowIndexPageUnauth(t *testing.T) {
@@ -130,7 +128,7 @@ func TestArticleCreationAuthenticated(t *testing.T) {
 
 	http.SetCookie(w, &http.Cookie{Name: "token", Value: "123"})
 
-	r.Handle(http.MethodPost, "/article/create", createArticle)
+	r.Handle(http.MethodPost, createRoute, createArticle)
 
 	articlePayload := getArticlePOSTPayload()
 
