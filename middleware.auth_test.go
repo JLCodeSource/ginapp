@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// TODO - turn tests below into a table test
+
 func TestEnsureLoggedInUnauthenticated(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := getRouter(false)
