@@ -1,17 +1,17 @@
 package main
 
 import (
-	"testing"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"io/ioutil"
+	"testing"
 )
 
 func TestUsernameAvailability(t *testing.T) {
 	saveLists()
 	newusername := "newuser"
 	existingusername := "user1"
-	
+
 	assertUsernameAvailable(t, newusername, true)
 	assertUsernameAvailable(t, existingusername, false)
 
@@ -36,21 +36,21 @@ func TestValidUserRegistration(t *testing.T) {
 func TestInvalidUserRegistration(t *testing.T) {
 	saveLists()
 
-	t.Run("cannot register existing user" , func(t *testing.T){
+	t.Run("cannot register existing user", func(t *testing.T) {
 
 		u, err := registerNewUser("user1", "pass1")
 
 		assertError(t, err, ErrUsernameUnavailable)
 		assertNilUser(t, u)
 	})
-	
-	t.Run("cannot register user without valid password", func(t *testing.T){
+
+	t.Run("cannot register user without valid password", func(t *testing.T) {
 
 		u, err := registerNewUser("newuser", "")
 
 		assertError(t, err, ErrPasswordNotEmpty)
 		assertNilUser(t, u)
-	
+
 	})
 
 	restoreLists()
@@ -66,8 +66,8 @@ func TestUserValidity(t *testing.T) {
 	empty := ""
 
 	validTests := []struct {
-		name string
-		pass string
+		name  string
+		pass  string
 		valid bool
 	}{
 		{name: user1, pass: pass1, valid: true},
@@ -83,7 +83,7 @@ func TestUserValidity(t *testing.T) {
 	}
 }
 
-func TestLoginUnauthenticated(t *testing.T){
+func TestLoginUnauthenticated(t *testing.T) {
 	saveLists()
 	w := httptest.NewRecorder()
 	r := getRouter(true)

@@ -10,6 +10,7 @@ const (
 	// ErrPasswordNotEmpty means that the password can't be empty
 	ErrPasswordNotEmpty = Err("password can't be empty")
 )
+
 // Err are errors that can happen when interacting with FSPS
 type Err string
 

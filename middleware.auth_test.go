@@ -1,10 +1,10 @@
 package main
 
 import (
-	"testing"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
-	"github.com/gin-gonic/gin"
+	"testing"
 )
 
 // TODO - turn tests below into a table test
@@ -15,12 +15,12 @@ func TestEnsureLoggedInUnauthenticated(t *testing.T) {
 	r.Handle(http.MethodGet, "/", setLoggedIn(false), ensureLoggedIn(), func(c *gin.Context) {
 		t.Errorf("not logged in so expected not be seen as logged in")
 	})
-	
+
 	req, _ := http.NewRequest(http.MethodGet, "/", nil)
-	
+
 	r.ServeHTTP(w, req)
 
-	assertStatus(t, w.Code, http.StatusUnauthorized)	
+	assertStatus(t, w.Code, http.StatusUnauthorized)
 }
 func TestEnsureLoggedInAuthenticated(t *testing.T) {
 	w := httptest.NewRecorder()
@@ -30,21 +30,21 @@ func TestEnsureLoggedInAuthenticated(t *testing.T) {
 	})
 
 	req, _ := http.NewRequest(http.MethodGet, "/", nil)
-	
+
 	r.ServeHTTP(w, req)
 
 	assertStatus(t, w.Code, http.StatusOK)
 }
 
 func TestEnsureNotLoggedInAuthenticated(t *testing.T) {
-	w:= httptest.NewRecorder()
-	r:= getRouter(false)
+	w := httptest.NewRecorder()
+	r := getRouter(false)
 	r.Handle(http.MethodGet, "/", setLoggedIn(true), ensureNotLoggedIn(), func(c *gin.Context) {
 		t.Errorf("logged in, but seen as not logged in")
 	})
 
 	req, _ := http.NewRequest(http.MethodGet, "/", nil)
-	
+
 	r.ServeHTTP(w, req)
 
 	assertStatus(t, w.Code, http.StatusUnauthorized)
@@ -52,22 +52,22 @@ func TestEnsureNotLoggedInAuthenticated(t *testing.T) {
 }
 
 func TestEnsureNotLoggedInUnauthenticted(t *testing.T) {
-	w:= httptest.NewRecorder()
-	r:= getRouter(false)
+	w := httptest.NewRecorder()
+	r := getRouter(false)
 	r.Handle(http.MethodGet, "/", setLoggedIn(false), ensureNotLoggedIn(), func(c *gin.Context) {
 		c.Status(http.StatusOK)
 	})
 
 	req, _ := http.NewRequest(http.MethodGet, "/", nil)
-	
+
 	r.ServeHTTP(w, req)
 
 	assertStatus(t, w.Code, http.StatusOK)
 }
 
 func TestSetUserStatusAuthenticated(t *testing.T) {
-	w:= httptest.NewRecorder()
-	r:= getRouter(false)
+	w := httptest.NewRecorder()
+	r := getRouter(false)
 	r.Handle(http.MethodGet, "/", setUserStatus(), func(c *gin.Context) {
 		loggedInInterface, exists := c.Get("is_logged_in")
 		if !exists || !loggedInInterface.(bool) {
@@ -78,15 +78,15 @@ func TestSetUserStatusAuthenticated(t *testing.T) {
 	http.SetCookie(w, &http.Cookie{Name: "token", Value: "123"})
 	req, _ := http.NewRequest(http.MethodGet, "/", nil)
 	req.Header = http.Header{"Cookie": w.HeaderMap["Set-Cookie"]}
-	
+
 	r.ServeHTTP(w, req)
 
 	assertStatus(t, w.Code, http.StatusOK)
 }
 
 func TestSetUserStatusUnauthenticated(t *testing.T) {
-	w:= httptest.NewRecorder()
-	r:= getRouter(false)
+	w := httptest.NewRecorder()
+	r := getRouter(false)
 	r.Handle(http.MethodGet, "/", setUserStatus(), func(c *gin.Context) {
 		loggedInInterface, exists := c.Get("is_logged_in")
 		if exists && loggedInInterface.(bool) {
@@ -95,7 +95,7 @@ func TestSetUserStatusUnauthenticated(t *testing.T) {
 	})
 
 	req, _ := http.NewRequest(http.MethodGet, "/", nil)
-		
+
 	r.ServeHTTP(w, req)
 
 	assertStatus(t, w.Code, http.StatusOK)

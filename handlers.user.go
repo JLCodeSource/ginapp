@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
 	"strconv"
-	"github.com/gin-gonic/gin"
 )
 
 func showRegistrationPage(c *gin.Context) {
@@ -24,7 +24,7 @@ func register(c *gin.Context) {
 	// show the error message on the login page
 	if err != nil {
 		c.HTML(http.StatusBadRequest, "register.html", gin.H{
-			"ErrorTitle": "Registration Failed",
+			"ErrorTitle":   "Registration Failed",
 			"ErrorMessage": err.Error()})
 	} else {
 		token := generateSessionToken()
@@ -34,7 +34,7 @@ func register(c *gin.Context) {
 		render(c, gin.H{
 			"title": "Successful registration & Login"}, "login-successful.html")
 	}
-	
+
 }
 
 func generateSessionToken() string {
@@ -61,11 +61,11 @@ func performLogin(c *gin.Context) {
 
 		render(c, gin.H{
 			"title": "Successful Login"}, "login-successful.html")
-		} else {
-			c.HTML(http.StatusBadRequest, "login.html", gin.H{
-				"ErrorTitle":	"Login Failed",
-				"ErrorMessage":	"Invalid credentials"})
-		}
+	} else {
+		c.HTML(http.StatusBadRequest, "login.html", gin.H{
+			"ErrorTitle":   "Login Failed",
+			"ErrorMessage": "Invalid credentials"})
+	}
 }
 
 func logout(c *gin.Context) {

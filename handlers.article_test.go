@@ -1,12 +1,12 @@
 package main
 
 import (
-	"net/http/httptest"
-	"testing"
-	"io/ioutil"
-	"net/http"
 	"encoding/json"
 	"encoding/xml"
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 )
 
 func TestShowIndexPageUnauth(t *testing.T) {
@@ -17,11 +17,11 @@ func TestShowIndexPageUnauth(t *testing.T) {
 	// Create a request to send to the above route
 	req, _ := http.NewRequest(http.MethodGet, "/", nil)
 
-	t.Run("returns the page title in the body", func (t *testing.T) {
+	t.Run("returns the page title in the body", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
 		page, err := ioutil.ReadAll(w.Body)
-		
+
 		title := "<title>Home Page</title>"
 
 		assertStatus(t, w.Code, http.StatusOK)
@@ -37,7 +37,7 @@ func TestGetArticle(t *testing.T) {
 	r.Handle(http.MethodGet, "/article/view/:article_id", getArticle)
 
 	t.Run("returns a single article", func(t *testing.T) {
-		
+
 		req, _ := http.NewRequest(http.MethodGet, "/article/view/1", nil)
 		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
@@ -52,23 +52,23 @@ func TestGetArticle(t *testing.T) {
 		assertPageContains(t, page, body)
 
 	})
-/* 	t.Run("returns a not found on a non-integer id", func(t *testing.T) {		
-		req, _ := http.NewRequest(http.MethodGet, "/article/view/asdasda", nil)
-		w := httptest.NewRecorder()
-		r.ServeHTTP(w, req)
-			
-		assertStatus(t, w.Code, http.StatusNotFound)
-	})
- 	t.Run("returns a not found and error on non-existent article", func(t *testing.T) {
-		req, _ := http.NewRequest(http.MethodGet, "/article/view/3", nil)
-		w := httptest.NewRecorder()
-		r.ServeHTTP(w, req)
-		_, err := getArticleByID(3)
-		want := ErrIDNotFound
-		assertStatus(t, w.Code, http.StatusNotFound)
-		assertError(t, err, want)
+	/* 	t.Run("returns a not found on a non-integer id", func(t *testing.T) {
+			req, _ := http.NewRequest(http.MethodGet, "/article/view/asdasda", nil)
+			w := httptest.NewRecorder()
+			r.ServeHTTP(w, req)
 
-	}) */
+			assertStatus(t, w.Code, http.StatusNotFound)
+		})
+	 	t.Run("returns a not found and error on non-existent article", func(t *testing.T) {
+			req, _ := http.NewRequest(http.MethodGet, "/article/view/3", nil)
+			w := httptest.NewRecorder()
+			r.ServeHTTP(w, req)
+			_, err := getArticleByID(3)
+			want := ErrIDNotFound
+			assertStatus(t, w.Code, http.StatusNotFound)
+			assertError(t, err, want)
+
+		}) */
 }
 
 func TestArticleListJSON(t *testing.T) {
@@ -77,44 +77,44 @@ func TestArticleListJSON(t *testing.T) {
 	r.Handle(http.MethodGet, "/", showIndexPage)
 
 	t.Run("returns multiple articles", func(t *testing.T) {
-		
+
 		req, _ := http.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Add("Accept", "application/json")
 		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
-		page, err := ioutil.ReadAll(w.Body)
+		page, _ := ioutil.ReadAll(w.Body)
 
 		var articles []article
-		err = json.Unmarshal(page, &articles)
+		err := json.Unmarshal(page, &articles)
 
 		assertStatus(t, w.Code, http.StatusOK)
 		assertNoError(t, err)
-		if ! (len(articles) >= 2) {
+		if !(len(articles) >= 2) {
 			t.Errorf("expected 2 or more articles got '%d'", len(articles))
 		}
 
 	})
 }
 
-func TestArticleXML(t *testing.T){
+func TestArticleXML(t *testing.T) {
 	r := getRouter(true)
 
 	r.Handle(http.MethodGet, "/article/view/:article_id", getArticle)
 
 	t.Run("returns multiple articles", func(t *testing.T) {
-		
+
 		req, _ := http.NewRequest(http.MethodGet, "/article/view/1", nil)
 		req.Header.Add("Accept", "application/xml")
 		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
-		page, err := ioutil.ReadAll(w.Body)
+		page, _ := ioutil.ReadAll(w.Body)
 
 		var a article
-		err = xml.Unmarshal(page, &a)
+		err := xml.Unmarshal(page, &a)
 
 		assertStatus(t, w.Code, http.StatusOK)
 		assertNoError(t, err)
-		if ! (a.ID == 1 && len(a.Title) >= 0) {
+		if !(a.ID == 1 && len(a.Title) >= 0) {
 			t.Errorf("expected id 1 and title len >= 0 but got '%d' & '%d'", a.ID, len(a.Title))
 		}
 
@@ -134,7 +134,7 @@ func TestArticleCreationAuthenticated(t *testing.T) {
 
 	req := getHeaders(t, http.MethodPost, createRoute, articlePayload)
 	req.Header = http.Header{"Cookie": w.HeaderMap["Set-Cookie"]}
-	
+
 	r.ServeHTTP(w, req)
 
 	page, err := ioutil.ReadAll(w.Body)

@@ -10,8 +10,8 @@ func TestGetAllArticles(t *testing.T) {
 	want := articleList
 
 	//TODO refactor for asserts
-	
-	// Check that the length of the list of articles returned is the same 
+
+	// Check that the length of the list of articles returned is the same
 	// as the length of the global variable holding the list
 	gotLen := len(got)
 	wantLen := len(want)
@@ -30,7 +30,7 @@ func TestGetAllArticles(t *testing.T) {
 		if a.Content != want[i].Content {
 			t.Errorf("got '%s' article content, wanted '%s'", a.Content, want[i].Content)
 		}
-		
+
 	}
 }
 
@@ -45,7 +45,7 @@ func TestCreateNewArticle(t *testing.T) {
 
 	allArticles := getAllArticles()
 	newLength := len(allArticles)
-	
+
 	assertNoError(t, err)
 	assertNumberOfArticles(t, newLength, numberOfArticles+1)
 	assertArticleTitle(t, a, newTitle)

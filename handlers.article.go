@@ -6,25 +6,25 @@ import (
 	"strconv"
 )
 
-func showIndexPage (c *gin.Context) {
+func showIndexPage(c *gin.Context) {
 
-		articles := getAllArticles()
+	articles := getAllArticles()
 
-		// Call the HTML method of the Context to render a template	
-		render(c, gin.H{
-				"title": "Home Page",
-				"payload": articles,
-			}, "index.html")
+	// Call the HTML method of the Context to render a template
+	render(c, gin.H{
+		"title":   "Home Page",
+		"payload": articles,
+	}, "index.html")
 }
 
-func getArticle (c *gin.Context) {
+func getArticle(c *gin.Context) {
 
 	// Check for valid article ID in URL
 	articleID, err := strconv.Atoi(c.Param("article_id"))
 	// if not valid article ID in URL report Not Found
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
-		
+
 	}
 
 	// Check whether article exists
@@ -36,13 +36,13 @@ func getArticle (c *gin.Context) {
 
 	// display article
 	render(c, gin.H{
-			"title": article.Title,
-			"payload": article,
-		}, "article.html")	
+		"title":   article.Title,
+		"payload": article,
+	}, "article.html")
 
 }
 
-func createArticle (c *gin.Context) { 
+func createArticle(c *gin.Context) {
 	title := c.PostForm("title")
 	content := c.PostForm("content")
 
@@ -51,12 +51,12 @@ func createArticle (c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	} else {
 		render(c, gin.H{
-			"title": "Submission Successful",
+			"title":   "Submission Successful",
 			"payload": a}, "submission-successful.html")
 	}
 }
 
-func showArticleCreationPage (c *gin.Context) {
+func showArticleCreationPage(c *gin.Context) {
 	render(c, gin.H{
 		"title": "Create New Article"}, "create-article.html")
 }

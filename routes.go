@@ -27,5 +27,4 @@ func initRoutes() {
 		articleRoutes.Handle(http.MethodPost, "/create", ensureLoggedIn(), createArticle)
 	}
 
-	
 }

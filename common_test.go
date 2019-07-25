@@ -1,26 +1,26 @@
 package main
 
 import (
-	"os"
-	"testing"
 	"github.com/gin-gonic/gin"
-	"strings"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
+	"strings"
+	"testing"
 )
 
 const (
-	loginRoute = "/u/login"
+	loginRoute    = "/u/login"
 	registerRoute = "/u/register"
-	createRoute = "/article/create"
+	createRoute   = "/article/create"
 )
 
 var dummyArticleList []article
 
 var dummyUserList []user
 
-// This funciton is used for setup before executing the test functions
+// This function is used for setup before executing the test functions
 func TestMain(m *testing.M) {
 	// Set Gin to Test Mode
 	gin.SetMode(gin.TestMode)
@@ -78,7 +78,7 @@ func getArticlePOSTPayload() string {
 	return params.Encode()
 }
 
-func getHeaders(t *testing.T, method, route, payload string) *http.Request{
+func getHeaders(t *testing.T, method, route, payload string) *http.Request {
 
 	sPayload := strings.NewReader(payload)
 	lenPayload := strconv.Itoa(len(payload))
@@ -133,7 +133,7 @@ func assertUsernameAvailable(t *testing.T, username string, available bool) {
 	got := isUsernameAvailable(username)
 	want := available
 	if got != want {
-			t.Errorf("wanted username '%s' available to be %t, but got %t", username, want, got)
+		t.Errorf("wanted username '%s' available to be %t, but got %t", username, want, got)
 	}
 }
 
@@ -142,15 +142,15 @@ func assertUserValid(t *testing.T, username, password string, valid bool) {
 	got := isUserValid(username, password)
 	want := valid
 	if got != want {
-		t.Errorf("wanted user '%s' with pass '%s' validity to be %t but they were %t", 
+		t.Errorf("wanted user '%s' with pass '%s' validity to be %t but they were %t",
 			username, password, want, got)
 	}
 }
 
 func assertPageContains(t *testing.T, page []byte, content string) {
 	t.Helper()
-	isContent := strings.Index(string(page), content) > 0 
-	if ! isContent  {
+	isContent := strings.Index(string(page), content) > 0
+	if !isContent {
 		t.Errorf("page does not contain '%s' as expected", content)
 	}
 

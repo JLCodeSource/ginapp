@@ -1,10 +1,10 @@
 package main
 
 import (
-	"testing"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"io/ioutil"
+	"testing"
 )
 
 func TestShowRegistrationPageUnauthenticated(t *testing.T) {
@@ -26,7 +26,7 @@ func TestShowRegistrationPageUnauthenticated(t *testing.T) {
 
 }
 
-func TestShowLoginPageUnauthenticated(t *testing.T){
+func TestShowLoginPageUnauthenticated(t *testing.T) {
 	r := getRouter(true)
 	w := httptest.NewRecorder()
 
@@ -53,7 +53,7 @@ func TestRegisterUnauthenticated(t *testing.T) {
 	r.Handle(http.MethodPost, registerRoute, register)
 
 	registrationPayload := getRegistrationPOSTPayload()
-	
+
 	req := getHeaders(t, http.MethodPost, registerRoute, registrationPayload)
 
 	r.ServeHTTP(w, req)
@@ -88,12 +88,11 @@ func TestRegisterUnauthenticatedUnavailableUsername(t *testing.T) {
 
 }
 
-
 func TestLoginUnauthenticatedIncorrectCredentials(t *testing.T) {
 	saveLists()
 	w := httptest.NewRecorder()
 	r := getRouter(true)
-	
+
 	r.Handle(http.MethodPost, loginRoute, performLogin)
 
 	loginPayload := getRegistrationPOSTPayload()
@@ -107,4 +106,3 @@ func TestLoginUnauthenticatedIncorrectCredentials(t *testing.T) {
 	restoreLists()
 
 }
-
